@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: stockpilot-backend
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/stockpilot_db
+    username: root
+    password: password
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8080

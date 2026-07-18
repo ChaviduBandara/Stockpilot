@@ -5,7 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class StockPilotApplication {
+
     public static void main(String[] args) {
-        SpringApplication.run(StockPilotApplication.class);
+        SpringApplication.run(StockPilotApplication.class, args);
     }
 }
