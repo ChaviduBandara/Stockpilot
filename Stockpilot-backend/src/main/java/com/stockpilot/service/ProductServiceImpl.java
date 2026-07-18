@@ -9,8 +9,8 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService{
 
-    @Autowired
-    ProductRepository productRepository;
+
+    private final ProductRepository productRepository;
 
     public ProductServiceImpl(ProductRepository productRepository){
         this.productRepository = productRepository;
@@ -53,5 +53,15 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Product> searchProductsByName(String name) {
+        return productRepository.findByNameContainingIgnoreCase(name);
+    }
+
+    @Override
+    public List<Product> getLowStockProducts() {
+        return productRepository.findLowStockProducts();
     }
 }

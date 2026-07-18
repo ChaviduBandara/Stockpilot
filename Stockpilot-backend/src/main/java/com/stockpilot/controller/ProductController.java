@@ -2,7 +2,6 @@ package com.stockpilot.controller;
 
 import com.stockpilot.entity.Product;
 import com.stockpilot.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,12 +11,13 @@ import java.util.List;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    @Autowired
-    ProductService productService;
+
+    private final ProductService productService;
 
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
+
 
     @GetMapping
     public List<Product> getAllProducts(){
@@ -25,7 +25,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public Product addProduct(Product product){
+    public Product addProduct(@RequestBody Product product){
         return productService.addProduct(product);
     }
 
@@ -40,7 +40,7 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @GetMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(
             @PathVariable Long id,
             @RequestBody Product product
@@ -64,5 +64,15 @@ public class ProductController {
 
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public List<Product> searchProducts(@RequestParam String name) {
+        return productService.searchProductsByName(name);
+    }
+
+    @GetMapping("/low-stock")
+    public List<Product> getLowStockProducts() {
+        return productService.getLowStockProducts();
     }
 }
