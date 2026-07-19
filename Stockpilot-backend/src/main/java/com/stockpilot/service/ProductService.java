@@ -1,18 +1,19 @@
 package com.stockpilot.service;
 
+import com.stockpilot.dto.ProductRequest;
 import com.stockpilot.entity.Product;
 
 import java.util.List;
 
 public interface ProductService {
 
-    Product addProduct(Product product);
+    Product addProduct(ProductRequest request);
 
     List<Product> getAllProducts();
 
     Product getProductById(Long id);
 
-    Product updateProduct(Long id, Product product);
+    Product updateProduct(Long id, ProductRequest request);
 
     void deleteProduct(Long id);
 

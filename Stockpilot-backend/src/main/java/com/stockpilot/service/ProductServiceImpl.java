@@ -1,23 +1,51 @@
 package com.stockpilot.service;
 
+import com.stockpilot.dto.ProductRequest;
+import com.stockpilot.entity.Category;
 import com.stockpilot.entity.Product;
+import com.stockpilot.repository.CategoryRepository;
 import com.stockpilot.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
-public class ProductServiceImpl implements ProductService{
-
+public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository){
+
+    // Using constructor injection (not using @Autowired)
+
+    public ProductServiceImpl(
+            ProductRepository productRepository,
+            CategoryRepository categoryRepository
+    ) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
+
     @Override
-    public Product addProduct(Product product) {
+    public Product addProduct(ProductRequest request) {
+
+        Category category = categoryRepository.findById(request.getCategoryId()).orElse(null);
+
+        if (category == null) {
+            return null;
+        }
+
+        Product product = new Product();
+
+        product.setName(request.getName());
+        product.setSku(request.getSku());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setQuantity(request.getQuantity());
+        product.setReorderLevel(request.getReorderLevel());
+        product.setCategory(category);
+
         return productRepository.save(product);
     }
 
@@ -28,24 +56,32 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+        return productRepository.findById(id)
+                .orElse(null);
     }
 
     @Override
-    public Product updateProduct(Long id, Product product) {
-        Product existingProduct = productRepository.findById(id)
-                .orElse(null);
+    public Product updateProduct(Long id, ProductRequest request) {
+
+        Product existingProduct = productRepository.findById(id).orElse(null);
 
         if (existingProduct == null) {
             return null;
         }
 
-        existingProduct.setName(product.getName());
-        existingProduct.setSku(product.getSku());
-        existingProduct.setDescription(product.getDescription());
-        existingProduct.setPrice(product.getPrice());
-        existingProduct.setQuantity(product.getQuantity());
-        existingProduct.setReorderLevel(product.getReorderLevel());
+        Category category = categoryRepository.findById(request.getCategoryId()).orElse(null);
+
+        if (category == null) {
+            return null;
+        }
+
+        existingProduct.setName(request.getName());
+        existingProduct.setSku(request.getSku());
+        existingProduct.setDescription(request.getDescription());
+        existingProduct.setPrice(request.getPrice());
+        existingProduct.setQuantity(request.getQuantity());
+        existingProduct.setReorderLevel(request.getReorderLevel());
+        existingProduct.setCategory(category);
 
         return productRepository.save(existingProduct);
     }

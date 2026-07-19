@@ -1,5 +1,6 @@
 package com.stockpilot.controller;
 
+import com.stockpilot.dto.ProductRequest;
 import com.stockpilot.entity.Product;
 import com.stockpilot.service.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -11,29 +12,34 @@ import java.util.List;
 @RequestMapping("/api/products")
 public class ProductController {
 
-
     private final ProductService productService;
 
+    // constructor injection
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
-
     @GetMapping
-    public List<Product> getAllProducts(){
+    public List<Product> getAllProducts() {
         return productService.getAllProducts();
     }
 
     @PostMapping
-    public Product addProduct(@RequestBody Product product){
-        return productService.addProduct(product);
+    public ResponseEntity<Product> addProduct(@RequestBody ProductRequest request) {
+        Product savedProduct = productService.addProduct(request);
+
+        if (savedProduct == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(savedProduct);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id){
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         Product product = productService.getProductById(id);
 
-        if (product == null){
+        if (product == null) {
             return ResponseEntity.notFound().build();
         }
 
@@ -41,11 +47,9 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(
-            @PathVariable Long id,
-            @RequestBody Product product
-    ) {
-        Product updatedProduct = productService.updateProduct(id, product);
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody ProductRequest request) {
+        Product updatedProduct =
+                productService.updateProduct(id, request);
 
         if (updatedProduct == null) {
             return ResponseEntity.notFound().build();
@@ -55,7 +59,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id){
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         Product product = productService.getProductById(id);
 
         if (product == null) {
@@ -63,11 +67,12 @@ public class ProductController {
         }
 
         productService.deleteProduct(id);
+
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/search")
-    public List<Product> searchProducts(@RequestParam String name) {
+    @GetMapping("/search/{name}")
+    public List<Product> searchProducts(@PathVariable String name) {
         return productService.searchProductsByName(name);
     }
 

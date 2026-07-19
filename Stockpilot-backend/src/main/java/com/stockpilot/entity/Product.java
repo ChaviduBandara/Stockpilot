@@ -38,4 +38,8 @@ public class Product {
 
     @Column(nullable = false)
     private Integer reorderLevel;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 }
