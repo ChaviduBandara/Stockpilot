@@ -14,4 +14,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findLowStockProducts();
 }
 
-// Test commit
+// Test commit 2
