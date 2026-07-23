@@ -12,4 +12,7 @@ public interface SalesOrderService {
     List<SalesOrder> getAllOrders();
 
     SalesOrder getOrderById(Long id);
+
+    SalesOrder cancelOrder(Long id);
+
 }

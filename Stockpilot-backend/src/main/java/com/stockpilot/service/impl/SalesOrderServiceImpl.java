@@ -1,4 +1,4 @@
-package com.stockpilot.service;
+package com.stockpilot.service.impl;
 
 import com.stockpilot.dto.OrderItemRequest;
 import com.stockpilot.dto.SalesOrderRequest;
@@ -6,6 +6,7 @@ import com.stockpilot.entity.*;
 import com.stockpilot.repository.CustomerRepository;
 import com.stockpilot.repository.ProductRepository;
 import com.stockpilot.repository.SalesOrderRepository;
+import com.stockpilot.service.SalesOrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -115,5 +116,39 @@ public class SalesOrderServiceImpl implements SalesOrderService {
     @Override
     public SalesOrder getOrderById(Long id) {
         return salesOrderRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public SalesOrder cancelOrder(Long id) {
+
+        SalesOrder salesOrder = salesOrderRepository
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Sales order not found"
+                ));
+
+        if (salesOrder.getStatus() == OrderStatus.CANCELLED) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Sales order is already cancelled"
+            );
+        }
+
+        for (SalesOrderItem item : salesOrder.getItems()) {
+
+            Product product = item.getProduct();
+
+            product.setQuantity(
+                    product.getQuantity() + item.getQuantity()
+            );
+
+            productRepository.save(product);
+        }
+
+        salesOrder.setStatus(OrderStatus.CANCELLED);
+
+        return salesOrderRepository.save(salesOrder);
     }
 }

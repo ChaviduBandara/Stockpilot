@@ -1,7 +1,8 @@
-package com.stockpilot.service;
+package com.stockpilot.service.impl;
 
 import com.stockpilot.entity.Customer;
 import com.stockpilot.repository.CustomerRepository;
+import com.stockpilot.service.CustomerService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
