@@ -1,6 +1,7 @@
 package com.stockpilot.controller;
 
 import com.stockpilot.dto.SalesOrderRequest;
+import com.stockpilot.entity.OrderStatus;
 import com.stockpilot.entity.SalesOrder;
 import com.stockpilot.service.SalesOrderService;
 import org.springframework.http.HttpStatus;
@@ -50,5 +51,15 @@ public class SalesOrderController {
         SalesOrder cancelledOrder = salesOrderService.cancelOrder(id);
 
         return ResponseEntity.ok(cancelledOrder);
+    }
+
+    @GetMapping("/customer/{customerId}")
+    public List<SalesOrder> getOrdersByCustomer(@PathVariable Long customerId) {
+        return salesOrderService.getOrdersByCustomer(customerId);
+    }
+
+    @GetMapping("/status/{status}")
+    public List<SalesOrder> getOrdersByStatus(@PathVariable OrderStatus status) {
+        return salesOrderService.getOrdersByStatus(status);
     }
 }

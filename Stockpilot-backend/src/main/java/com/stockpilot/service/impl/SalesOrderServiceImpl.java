@@ -151,4 +151,24 @@ public class SalesOrderServiceImpl implements SalesOrderService {
 
         return salesOrderRepository.save(salesOrder);
     }
+
+    @Override
+    public List<SalesOrder> getOrdersByCustomer(Long customerId) {
+
+        if (!customerRepository.existsById(customerId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Customer not found"
+            );
+        }
+
+        return salesOrderRepository
+                .findByCustomerIdOrderByOrderDateDesc(customerId);
+    }
+
+    @Override
+    public List<SalesOrder> getOrdersByStatus(OrderStatus status) {
+        return salesOrderRepository
+                .findByStatusOrderByOrderDateDesc(status);
+    }
 }
