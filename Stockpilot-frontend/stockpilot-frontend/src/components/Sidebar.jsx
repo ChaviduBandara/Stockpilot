@@ -1,25 +1,29 @@
-import React from 'react'
+import { NavLink } from "react-router";
 
 function Sidebar() {
   return (
-    <aside className='sidebar'>
-        <div className='logo'>
-            <h2>StockPilot</h2>
-            <p>Inventory System</p>
-        </div>
+    <aside className="sidebar">
+      <div className="logo">
+        <h2>StockPilot</h2>
+        <p>Inventory System</p>
+      </div>
 
-        <nav className='sidebar-menu'>
-            <a href="#" className='active'>Dashboard</a>
+      <nav className="sidebar-menu">
+        <NavLink to="/" end>
+          Dashboard
+        </NavLink>
 
-            <a href="#">Products</a>
-            <a href="#">Categories</a>
-            <a href="#">Suppliers</a>
-            <a href="#">Customers</a>
-            <a href="#">Sales Orders</a>
+        <NavLink to="/products">
+          Products
+        </NavLink>
 
-        </nav>
+        <a href="#">Categories</a>
+        <a href="#">Suppliers</a>
+        <a href="#">Customers</a>
+        <a href="#">Sales Orders</a>
+      </nav>
     </aside>
   );
 }
 
-export default Sidebar
+export default Sidebar;
