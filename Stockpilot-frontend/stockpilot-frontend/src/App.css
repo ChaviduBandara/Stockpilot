@@ -146,4 +146,11 @@
     flex-direction: column;
     gap: 15px;
   }
+
+  .error-message {
+  padding: 14px;
+  border-radius: 8px;
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
 }
