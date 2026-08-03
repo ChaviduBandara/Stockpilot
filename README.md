@@ -1,110 +1,206 @@
-StockPilot
+StockPilot – Inventory and Order Management System
 
+A modern full-stack inventory and sales order management system built with Spring Boot, React, and MySQL.
 
-
-StockPilot is a full-stack inventory and sales order management system built with Spring Boot, React, and MySQL. It helps a business manage products, categories, suppliers, customers, stock levels, and sales orders through a simple dashboard.
-
-The project was created as a portfolio application to demonstrate backend API development, relational database design, business logic, and frontend integration.
+StockPilot helps businesses manage products, categories, suppliers, customers, stock levels, and sales orders through a clear dashboard and REST API.
 
 Features
 
+Dashboard Overview: Displays total products, low-stock products, categories, suppliers, customers, orders, completed orders, cancelled orders, and total revenue
+
+Product Management: Add, view, edit, and delete products
+
+Category Management: Organize products under different categories
+
+Supplier Management: Store and manage supplier details
+
+Customer Management: Add and maintain customer information
+
+Sales Order Management: Create orders containing multiple products
+
+Automatic Stock Updates: Product quantities decrease when an order is created
+
+Order Cancellation: Cancel an order and automatically restore product quantities
+
+Low-Stock Detection: Products are marked as low stock when quantity reaches the reorder level
+
+Order Filtering: Filter orders by customer or order status
+
+Responsive Interface: Frontend layout designed for desktop, tablet, and mobile devices
+
+REST API Integration: React frontend communicates with the Spring Boot backend using JSON
+
+Project Structure
+
+StockPilot/
+├── Stockpilot-backend/
+│   ├── src/
+│   │   └── main/
+│   │       ├── java/
+│   │       │   └── com/stockpilot/
+│   │       │       ├── controller/
+│   │       │       ├── dto/
+│   │       │       ├── entity/
+│   │       │       ├── repository/
+│   │       │       ├── service/
+│   │       │       └── StockPilotApplication.java
+│   │       └── resources/
+│   │           └── application.yml
+│   └── pom.xml
+│
+└── Stockpilot-frontend/
+    ├── src/
+    │   ├── components/
+    │   │   └── Sidebar.jsx
+    │   ├── pages/
+    │   │   ├── Dashboard.jsx
+    │   │   └── Products.jsx
+    │   ├── App.jsx
+    │   ├── App.css
+    │   ├── index.css
+    │   └── main.jsx
+    ├── package.json
+    ├── vite.config.js
+    └── index.html
+
+Frontend Pages
+
 Dashboard
 
-View the total number of products
+Displays a summary of inventory and sales data
 
-View low-stock product count
+Shows total products and low-stock products
 
-View total categories, suppliers, and customers
+Shows total categories, suppliers, and customers
 
-View total, completed, and cancelled orders
+Shows completed and cancelled order counts
 
-View revenue generated from completed orders
+Calculates revenue using completed orders only
 
-Product Management
+Products
 
-Add, view, update, and delete products
+Displays all products in a clear table
 
-Assign products to categories
+Shows product name, SKU, category, price, quantity, and reorder level
+
+Displays stock status using In Stock and Low Stock badges
+
+Includes an Add Product modal
+
+Supports editing and deleting products
+
+Loads category options from the backend
+
+Backend Modules
+
+Products
+
+Create products
+
+View all products
+
+View a product by ID
+
+Update products
+
+Delete products
 
 Search products by name
 
-Identify low-stock products
+View low-stock products
 
-Use reorder levels to determine when stock should be replenished
+Categories
 
-Display product stock status in the frontend
+Create categories
 
-Category Management
+View categories
 
-Add, view, update, and delete categories
+Update categories
 
-Organize products under categories
+Delete categories
 
-Supplier Management
+Suppliers
 
-Add, view, update, and delete suppliers
+Create suppliers
 
-Store supplier contact and address information
+View suppliers
 
-Customer Management
+Update suppliers
 
-Add, view, update, and delete customers
+Delete suppliers
 
-View orders belonging to a selected customer
+Customers
 
-Sales Order Management
+Create customers
 
-Create orders containing one or more products
+View customers
+
+Update customers
+
+Delete customers
+
+Sales Orders
+
+Create orders with one or more products
 
 Validate customer and product IDs
 
-Check whether enough stock is available
+Check available stock before creating an order
 
-Calculate item subtotals and the final order total
+Calculate item subtotals and total order amount
 
-Automatically reduce stock when an order is created
+Reduce product quantity after an order is created
 
-Cancel an order and restore its stock
+Cancel orders and restore stock
 
-Prevent the same order from being cancelled more than once
+Prevent an order from being cancelled more than once
 
-Filter orders by customer and order status
+Filter orders by customer
 
-Business Rules
+Filter orders by status
 
-Product SKUs must be unique.
+Stock and Reorder Logic
 
-Category names must be unique.
+Each product contains:
 
-Supplier and customer email addresses must be unique.
+quantity: Current available stock
 
-Product quantity cannot fall below the quantity required by an order.
+reorderLevel: The minimum stock level before more items should be ordered
 
 A product is considered low stock when:
 
 quantity <= reorderLevel
 
-Revenue includes only orders with the COMPLETED status.
+Example:
 
-Cancelling an order restores the quantities of all products in that order.
+Quantity: 3
+Reorder Level: 5
+Status: Low Stock
 
-A cancelled order cannot be cancelled again.
+Order Status
 
-Technology Stack
+StockPilot currently supports two order statuses:
+
+COMPLETED
+CANCELLED
+
+COMPLETED: The order was created successfully and stock was reduced
+
+CANCELLED: The order was cancelled and stock was restored
+
+Technologies Used
 
 Backend
 
 Java 21
 
-Spring Boot 4.1.0
+Spring Boot
 
 Spring Web
 
 Spring Data JPA
 
 Hibernate
-
-Bean Validation
 
 Maven
 
@@ -122,13 +218,13 @@ React Router
 
 JavaScript
 
-HTML
+HTML5
 
-CSS
+CSS3
 
 Fetch API
 
-Database and Tools
+Database and Development Tools
 
 MySQL
 
@@ -140,398 +236,60 @@ Visual Studio Code
 
 Postman
 
-Git and GitHub
-
-System Architecture
-
-React Frontend
-      |
-      | HTTP / JSON
-      v
-Spring Boot REST API
-      |
-      | Spring Data JPA / Hibernate
-      v
-MySQL Database
-
-The frontend sends HTTP requests to the Spring Boot REST API. The backend processes business rules and stores data in MySQL.
-
-Project Structure
-
-StockPilot/
-├── stockpilot-backend/
-│   ├── src/main/java/com/stockpilot/
-│   │   ├── controller/
-│   │   ├── dto/
-│   │   ├── entity/
-│   │   ├── repository/
-│   │   ├── service/
-│   │   └── StockPilotApplication.java
-│   ├── src/main/resources/
-│   │   └── application.yml
-│   └── pom.xml
-│
-└── stockpilot-frontend/
-    ├── src/
-    │   ├── components/
-    │   ├── pages/
-    │   ├── App.jsx
-    │   ├── App.css
-    │   ├── index.css
-    │   └── main.jsx
-    ├── package.json
-    └── vite.config.js
-
-Getting Started
-
-Prerequisites
-
-Install the following software:
-
-Java Development Kit 21
-
-Maven
-
-MySQL Server
-
-Node.js and npm
-
 Git
 
-Confirm that they are installed:
+GitHub
 
-java -version
-mvn -version
-node -v
-npm -v
-git --version
-
-Database Setup
-
-Create the MySQL database:
-
-CREATE DATABASE stockpilot_db;
-
-Update the backend configuration in:
-
-stockpilot-backend/src/main/resources/application.yml
-
-Example configuration:
-
-spring:
-  application:
-    name: stockpilot-backend
-
-  datasource:
-    url: jdbc:mysql://localhost:3306/stockpilot_db
-    username: root
-    password: your_mysql_password
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-
-server:
-  port: 8080
-
-Do not commit real database passwords to a public repository.
-
-Running the Backend
-
-Open a terminal inside the backend folder:
-
-cd stockpilot-backend
-
-Run the application:
-
-mvn spring-boot:run
-
-The backend runs at:
-
-http://localhost:8080
-
-You can also run StockPilotApplication.java directly from IntelliJ IDEA.
-
-Running the Frontend
-
-Open another terminal inside the frontend folder:
-
-cd stockpilot-frontend
-
-Install dependencies:
-
-npm install
-
-Start the Vite development server:
-
-npm run dev
-
-The frontend normally runs at:
-
-http://localhost:5173
-
-Vite may use another port, such as 5174, when port 5173 is already occupied.
-
-Vite Proxy Configuration
-
-The frontend uses a Vite proxy to send /api requests to the Spring Boot backend.
-
-Example vite.config.js:
-
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    proxy: {
-      "/api": {
-        target: "http://localhost:8080",
-        changeOrigin: true,
-      },
-    },
-  },
-});
-
-REST API Endpoints
+API Endpoints
 
 Products
 
-Method
-
-Endpoint
-
-Description
-
-GET
-
-/api/products
-
-Get all products
-
-GET
-
-/api/products/{id}
-
-Get a product by ID
-
-POST
-
-/api/products
-
-Create a product
-
-PUT
-
-/api/products/{id}
-
-Update a product
-
-DELETE
-
-/api/products/{id}
-
-Delete a product
-
-GET
-
-/api/products/search/{name}
-
-Search products by name
-
-GET
-
-/api/products/low-stock
-
-Get low-stock products
+GET    /api/products
+GET    /api/products/{id}
+POST   /api/products
+PUT    /api/products/{id}
+DELETE /api/products/{id}
+GET    /api/products/search/{name}
+GET    /api/products/low-stock
 
 Categories
 
-Method
-
-Endpoint
-
-Description
-
-GET
-
-/api/categories
-
-Get all categories
-
-GET
-
-/api/categories/{id}
-
-Get a category by ID
-
-POST
-
-/api/categories
-
-Create a category
-
-PUT
-
-/api/categories/{id}
-
-Update a category
-
-DELETE
-
-/api/categories/{id}
-
-Delete a category
+GET    /api/categories
+GET    /api/categories/{id}
+POST   /api/categories
+PUT    /api/categories/{id}
+DELETE /api/categories/{id}
 
 Suppliers
 
-Method
-
-Endpoint
-
-Description
-
-GET
-
-/api/suppliers
-
-Get all suppliers
-
-GET
-
-/api/suppliers/{id}
-
-Get a supplier by ID
-
-POST
-
-/api/suppliers
-
-Create a supplier
-
-PUT
-
-/api/suppliers/{id}
-
-Update a supplier
-
-DELETE
-
-/api/suppliers/{id}
-
-Delete a supplier
+GET    /api/suppliers
+GET    /api/suppliers/{id}
+POST   /api/suppliers
+PUT    /api/suppliers/{id}
+DELETE /api/suppliers/{id}
 
 Customers
 
-Method
-
-Endpoint
-
-Description
-
-GET
-
-/api/customers
-
-Get all customers
-
-GET
-
-/api/customers/{id}
-
-Get a customer by ID
-
-POST
-
-/api/customers
-
-Create a customer
-
-PUT
-
-/api/customers/{id}
-
-Update a customer
-
-DELETE
-
-/api/customers/{id}
-
-Delete a customer
+GET    /api/customers
+GET    /api/customers/{id}
+POST   /api/customers
+PUT    /api/customers/{id}
+DELETE /api/customers/{id}
 
 Sales Orders
 
-Method
-
-Endpoint
-
-Description
-
-GET
-
-/api/orders
-
-Get all sales orders
-
-GET
-
-/api/orders/{id}
-
-Get an order by ID
-
-POST
-
-/api/orders
-
-Create an order
-
-PUT
-
-/api/orders/{id}/cancel
-
-Cancel an order and restore stock
-
-GET
-
-/api/orders/customer/{customerId}
-
-Get orders by customer
-
-GET
-
-/api/orders/status/{status}
-
-Get orders by status
-
-Supported order statuses:
-
-COMPLETED
-CANCELLED
+GET  /api/orders
+GET  /api/orders/{id}
+POST /api/orders
+PUT  /api/orders/{id}/cancel
+GET  /api/orders/customer/{customerId}
+GET  /api/orders/status/{status}
 
 Dashboard
 
-Method
+GET /api/dashboard/summary
 
-Endpoint
-
-Description
-
-GET
-
-/api/dashboard/summary
-
-Get dashboard summary information
-
-Example Requests
-
-Create a Product
-
-POST /api/products
-Content-Type: application/json
+Example Product Request
 
 {
   "name": "Mechanical Keyboard",
@@ -543,10 +301,7 @@ Content-Type: application/json
   "categoryId": 1
 }
 
-Create a Sales Order
-
-POST /api/orders
-Content-Type: application/json
+Example Sales Order Request
 
 {
   "customerId": 1,
@@ -562,86 +317,72 @@ Content-Type: application/json
   ]
 }
 
-Cancel a Sales Order
+Database Setup
 
-PUT /api/orders/1/cancel
+Create the MySQL database:
 
-No request body is required.
+CREATE DATABASE stockpilot_db;
 
-Dashboard Summary Response
+Update application.yml with your MySQL credentials:
 
-{
-  "totalProducts": 12,
-  "lowStockProducts": 1,
-  "totalCategories": 8,
-  "totalSuppliers": 2,
-  "totalCustomers": 2,
-  "totalOrders": 1,
-  "completedOrders": 0,
-  "cancelledOrders": 1,
-  "totalRevenue": 0
-}
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/stockpilot_db
+    username: root
+    password: your_password
 
-Frontend Pages
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 
-The frontend currently includes:
+server:
+  port: 8080
 
-Dashboard
+Running the Project
 
-Products page
+Start the Backend
 
-Product table with stock status
+Open a terminal inside the backend folder:
 
-Add Product modal
+cd Stockpilot-backend
+mvn spring-boot:run
 
-Product editing and deletion controls
+The backend runs at:
 
-Sidebar navigation
+http://localhost:8080
 
-Planned pages include:
+Start the Frontend
 
-Categories
+Open another terminal inside the frontend folder:
 
-Suppliers
+cd Stockpilot-frontend
+npm install
+npm run dev
 
-Customers
+The frontend normally runs at:
 
-Sales Orders
-
-Authentication and authorization
-
-Screenshots
-
-Add project screenshots to a folder such as:
-
-docs/screenshots/
-
-Then include them in this README:
-
-![StockPilot Dashboard](docs/screenshots/dashboard.png)
-![StockPilot Products](docs/screenshots/products.png)
+http://localhost:5173
 
 Future Improvements
 
-Complete category, supplier, customer, and sales-order frontend pages
+Complete frontend pages for categories, suppliers, customers, and sales orders
 
-Add product deactivation instead of deleting products used in order history
-
-Add JWT authentication and role-based authorization
+Add product search and stock filters
 
 Add pagination and sorting
 
-Add advanced product and order filters
+Add product activation and deactivation
 
-Add purchase orders and supplier-product relationships
+Add purchase order management
+
+Add authentication and role-based authorization
 
 Add stock movement history
 
-Add validation messages and global exception handling
+Add reports and charts
 
-Add unit and integration tests
-
-Add Docker support
+Add automated testing
 
 Deploy the frontend, backend, and database
 
@@ -649,8 +390,4 @@ Author
 
 Chavidu Bandara
 
-Software Engineering undergraduate interested in backend engineering, full-stack development, Java, Spring Boot, and scalable software systems.
-
-License
-
-No open-source license has been added yet. Add a LICENSE file before allowing others to reuse or redistribute the project.
+Software Engineering undergraduate interested in Java, Spring Boot, backend development, full-stack development, and scalable software systems.
