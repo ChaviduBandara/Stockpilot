@@ -1,37 +1,27 @@
-StockPilot – Inventory and Order Management System
+# StockPilot – Inventory and Order Management System
 
 A modern full-stack inventory and sales order management system built with Spring Boot, React, and MySQL.
 
 StockPilot helps businesses manage products, categories, suppliers, customers, stock levels, and sales orders through a clear dashboard and REST API.
 
-Features
+## Features
 
-Dashboard Overview: Displays total products, low-stock products, categories, suppliers, customers, orders, completed orders, cancelled orders, and total revenue
+- **Dashboard Overview**: Displays total products, low-stock products, categories, suppliers, customers, orders, completed orders, cancelled orders, and total revenue
+- **Product Management**: Add, view, edit, and delete products
+- **Category Management**: Organize products under different categories
+- **Supplier Management**: Store and manage supplier details
+- **Customer Management**: Add and maintain customer information
+- **Sales Order Management**: Create orders containing multiple products
+- **Automatic Stock Updates**: Product quantities decrease when an order is created
+- **Order Cancellation**: Cancel an order and automatically restore product quantities
+- **Low-Stock Detection**: Products are marked as low stock when quantity reaches the reorder level
+- **Order Filtering**: Filter orders by customer or order status
+- **Responsive Interface**: Frontend layout designed for desktop, tablet, and mobile devices
+- **REST API Integration**: React frontend communicates with the Spring Boot backend using JSON
 
-Product Management: Add, view, edit, and delete products
+## Project Structure
 
-Category Management: Organize products under different categories
-
-Supplier Management: Store and manage supplier details
-
-Customer Management: Add and maintain customer information
-
-Sales Order Management: Create orders containing multiple products
-
-Automatic Stock Updates: Product quantities decrease when an order is created
-
-Order Cancellation: Cancel an order and automatically restore product quantities
-
-Low-Stock Detection: Products are marked as low stock when quantity reaches the reorder level
-
-Order Filtering: Filter orders by customer or order status
-
-Responsive Interface: Frontend layout designed for desktop, tablet, and mobile devices
-
-REST API Integration: React frontend communicates with the Spring Boot backend using JSON
-
-Project Structure
-
+```text
 StockPilot/
 ├── Stockpilot-backend/
 │   ├── src/
@@ -62,188 +52,143 @@ StockPilot/
     ├── package.json
     ├── vite.config.js
     └── index.html
+```
 
-Frontend Pages
+## Frontend Pages
 
-Dashboard
+### Dashboard
 
-Displays a summary of inventory and sales data
+- Displays a summary of inventory and sales data
+- Shows total products and low-stock products
+- Shows total categories, suppliers, and customers
+- Shows completed and cancelled order counts
+- Calculates revenue using completed orders only
 
-Shows total products and low-stock products
+### Products
 
-Shows total categories, suppliers, and customers
+- Displays all products in a clear table
+- Shows product name, SKU, category, price, quantity, and reorder level
+- Displays stock status using **In Stock** and **Low Stock** badges
+- Includes an Add Product modal
+- Supports editing and deleting products
+- Loads category options from the backend
 
-Shows completed and cancelled order counts
+## Backend Modules
 
-Calculates revenue using completed orders only
+### Products
 
-Products
+- Create products
+- View all products
+- View a product by ID
+- Update products
+- Delete products
+- Search products by name
+- View low-stock products
 
-Displays all products in a clear table
+### Categories
 
-Shows product name, SKU, category, price, quantity, and reorder level
+- Create categories
+- View categories
+- Update categories
+- Delete categories
 
-Displays stock status using In Stock and Low Stock badges
+### Suppliers
 
-Includes an Add Product modal
+- Create suppliers
+- View suppliers
+- Update suppliers
+- Delete suppliers
 
-Supports editing and deleting products
+### Customers
 
-Loads category options from the backend
+- Create customers
+- View customers
+- Update customers
+- Delete customers
 
-Backend Modules
+### Sales Orders
 
-Products
+- Create orders with one or more products
+- Validate customer and product IDs
+- Check available stock before creating an order
+- Calculate item subtotals and total order amount
+- Reduce product quantity after an order is created
+- Cancel orders and restore stock
+- Prevent an order from being cancelled more than once
+- Filter orders by customer
+- Filter orders by status
 
-Create products
-
-View all products
-
-View a product by ID
-
-Update products
-
-Delete products
-
-Search products by name
-
-View low-stock products
-
-Categories
-
-Create categories
-
-View categories
-
-Update categories
-
-Delete categories
-
-Suppliers
-
-Create suppliers
-
-View suppliers
-
-Update suppliers
-
-Delete suppliers
-
-Customers
-
-Create customers
-
-View customers
-
-Update customers
-
-Delete customers
-
-Sales Orders
-
-Create orders with one or more products
-
-Validate customer and product IDs
-
-Check available stock before creating an order
-
-Calculate item subtotals and total order amount
-
-Reduce product quantity after an order is created
-
-Cancel orders and restore stock
-
-Prevent an order from being cancelled more than once
-
-Filter orders by customer
-
-Filter orders by status
-
-Stock and Reorder Logic
+## Stock and Reorder Logic
 
 Each product contains:
 
-quantity: Current available stock
-
-reorderLevel: The minimum stock level before more items should be ordered
+- `quantity`: Current available stock
+- `reorderLevel`: The minimum stock level before more items should be ordered
 
 A product is considered low stock when:
 
+```text
 quantity <= reorderLevel
+```
 
 Example:
 
+```text
 Quantity: 3
 Reorder Level: 5
 Status: Low Stock
+```
 
-Order Status
+## Order Status
 
 StockPilot currently supports two order statuses:
 
+```text
 COMPLETED
 CANCELLED
+```
 
-COMPLETED: The order was created successfully and stock was reduced
+- **COMPLETED**: The order was created successfully and stock was reduced
+- **CANCELLED**: The order was cancelled and stock was restored
 
-CANCELLED: The order was cancelled and stock was restored
+## Technologies Used
 
-Technologies Used
+### Backend
 
-Backend
+- Java 21
+- Spring Boot
+- Spring Web
+- Spring Data JPA
+- Hibernate
+- Maven
+- Lombok
+- MySQL Connector/J
 
-Java 21
+### Frontend
 
-Spring Boot
+- React
+- Vite
+- React Router
+- JavaScript
+- HTML5
+- CSS3
+- Fetch API
 
-Spring Web
+### Database and Development Tools
 
-Spring Data JPA
+- MySQL
+- MySQL Workbench
+- IntelliJ IDEA
+- Visual Studio Code
+- Postman
+- Git
+- GitHub
 
-Hibernate
+## API Endpoints
 
-Maven
+### Products
 
-Lombok
-
-MySQL Connector/J
-
-Frontend
-
-React
-
-Vite
-
-React Router
-
-JavaScript
-
-HTML5
-
-CSS3
-
-Fetch API
-
-Database and Development Tools
-
-MySQL
-
-MySQL Workbench
-
-IntelliJ IDEA
-
-Visual Studio Code
-
-Postman
-
-Git
-
-GitHub
-
-API Endpoints
-
-Products
-
+```text
 GET    /api/products
 GET    /api/products/{id}
 POST   /api/products
@@ -251,46 +196,58 @@ PUT    /api/products/{id}
 DELETE /api/products/{id}
 GET    /api/products/search/{name}
 GET    /api/products/low-stock
+```
 
-Categories
+### Categories
 
+```text
 GET    /api/categories
 GET    /api/categories/{id}
 POST   /api/categories
 PUT    /api/categories/{id}
 DELETE /api/categories/{id}
+```
 
-Suppliers
+### Suppliers
 
+```text
 GET    /api/suppliers
 GET    /api/suppliers/{id}
 POST   /api/suppliers
 PUT    /api/suppliers/{id}
 DELETE /api/suppliers/{id}
+```
 
-Customers
+### Customers
 
+```text
 GET    /api/customers
 GET    /api/customers/{id}
 POST   /api/customers
 PUT    /api/customers/{id}
 DELETE /api/customers/{id}
+```
 
-Sales Orders
+### Sales Orders
 
+```text
 GET  /api/orders
 GET  /api/orders/{id}
 POST /api/orders
 PUT  /api/orders/{id}/cancel
 GET  /api/orders/customer/{customerId}
 GET  /api/orders/status/{status}
+```
 
-Dashboard
+### Dashboard
 
+```text
 GET /api/dashboard/summary
+```
 
-Example Product Request
+## Example Product Request
 
+```json
 {
   "name": "Mechanical Keyboard",
   "sku": "KEY-005",
@@ -300,9 +257,11 @@ Example Product Request
   "reorderLevel": 5,
   "categoryId": 1
 }
+```
 
-Example Sales Order Request
+## Example Sales Order Request
 
+```json
 {
   "customerId": 1,
   "items": [
@@ -316,15 +275,19 @@ Example Sales Order Request
     }
   ]
 }
+```
 
-Database Setup
+## Database Setup
 
 Create the MySQL database:
 
+```sql
 CREATE DATABASE stockpilot_db;
+```
 
-Update application.yml with your MySQL credentials:
+Update `application.yml` with your MySQL credentials:
 
+```yaml
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/stockpilot_db
@@ -338,56 +301,60 @@ spring:
 
 server:
   port: 8080
+```
 
-Running the Project
+## Running the Project
 
-Start the Backend
+### Start the Backend
 
 Open a terminal inside the backend folder:
 
+```bash
 cd Stockpilot-backend
 mvn spring-boot:run
+```
 
 The backend runs at:
 
+```text
 http://localhost:8080
+```
 
-Start the Frontend
+### Start the Frontend
 
 Open another terminal inside the frontend folder:
 
+```bash
 cd Stockpilot-frontend
 npm install
 npm run dev
+```
 
 The frontend normally runs at:
 
+```text
 http://localhost:5173
+```
 
-Future Improvements
+## Future Improvements
 
-Complete frontend pages for categories, suppliers, customers, and sales orders
+- Complete frontend pages for categories, suppliers, customers, and sales orders
+- Add product search and stock filters
+- Add pagination and sorting
+- Add product activation and deactivation
+- Add purchase order management
+- Add authentication and role-based authorization
+- Add stock movement history
+- Add reports and charts
+- Add automated testing
+- Deploy the frontend, backend, and database
 
-Add product search and stock filters
+## Author
 
-Add pagination and sorting
-
-Add product activation and deactivation
-
-Add purchase order management
-
-Add authentication and role-based authorization
-
-Add stock movement history
-
-Add reports and charts
-
-Add automated testing
-
-Deploy the frontend, backend, and database
-
-Author
-
-Chavidu Bandara
+**Chavidu Bandara**
 
 Software Engineering undergraduate interested in Java, Spring Boot, backend development, full-stack development, and scalable software systems.
+
+---
+
+© 2026 StockPilot. All rights reserved.
