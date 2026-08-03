@@ -22,6 +22,9 @@ function Products() {
   const [formError, setFormError] = useState("");
   const [saving, setSaving] = useState(false);
 
+  const [editingProductId, setEditingProductId] = useState(null);
+  const [deletingProductId, setDeletingProductId] = useState(null);
+
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -63,8 +66,26 @@ function Products() {
     fetchCategories();
   }, []);
 
-  const openModal = () => {
+  const openAddModal = () => {
+    setEditingProductId(null);
     setFormData(initialFormData);
+    setFormError("");
+    setShowModal(true);
+  };
+
+  const openEditModal = (product) => {
+    setEditingProductId(product.id);
+
+    setFormData({
+      name: product.name || "",
+      sku: product.sku || "",
+      description: product.description || "",
+      price: product.price || "",
+      quantity: product.quantity ?? "",
+      reorderLevel: product.reorderLevel ?? "",
+      categoryId: product.category?.id || "",
+    });
+
     setFormError("");
     setShowModal(true);
   };
@@ -72,6 +93,8 @@ function Products() {
   const closeModal = () => {
     if (!saving) {
       setShowModal(false);
+      setEditingProductId(null);
+      setFormData(initialFormData);
       setFormError("");
     }
   };
@@ -101,9 +124,17 @@ function Products() {
       categoryId: Number(formData.categoryId),
     };
 
+    const isEditing = editingProductId !== null;
+
+    const url = isEditing
+      ? `/api/products/${editingProductId}`
+      : "/api/products";
+
+    const method = isEditing ? "PUT" : "POST";
+
     try {
-      const response = await fetch("/api/products", {
-        method: "POST",
+      const response = await fetch(url, {
+        method,
         headers: {
           "Content-Type": "application/json",
         },
@@ -114,11 +145,15 @@ function Products() {
         const message = await response.text();
 
         throw new Error(
-          message || "Failed to add the product"
+          message ||
+          (isEditing
+            ? "Failed to update the product"
+            : "Failed to add the product")
         );
       }
 
       setShowModal(false);
+      setEditingProductId(null);
       setFormData(initialFormData);
 
       await fetchProducts();
@@ -127,6 +162,47 @@ function Products() {
       setFormError(error.message);
     } finally {
       setSaving(false);
+    }
+  };
+
+
+  const handleDelete = async (product) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${product.name}"?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setDeletingProductId(product.id);
+      setError("");
+
+      const response = await fetch(
+        `/api/products/${product.id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        const message = await response.text();
+
+        throw new Error(
+          message ||
+          "Unable to delete this product. It may already be used in an order."
+        );
+      }
+
+      await fetchProducts();
+    } catch (error) {
+      console.error(error);
+      setError(
+        "Unable to delete this product. Products used in sales orders should not be deleted."
+      );
+    } finally {
+      setDeletingProductId(null);
     }
   };
 
@@ -141,7 +217,7 @@ function Products() {
         <button
           type="button"
           className="add-product-button"
-          onClick={openModal}
+          onClick={openAddModal}
         >
           Add Product
         </button>
@@ -172,6 +248,7 @@ function Products() {
                 <th>Quantity</th>
                 <th>Reorder Level</th>
                 <th>Stock Status</th>
+                <th>Actions</th>
               </tr>
             </thead>
 
@@ -201,8 +278,7 @@ function Products() {
                     </td>
 
                     <td>
-                      LKR{" "}
-                      {Number(product.price).toLocaleString()}
+                      LKR {Number(product.price).toLocaleString()}
                     </td>
 
                     <td>{product.quantity}</td>
@@ -220,6 +296,30 @@ function Products() {
                         {isLowStock ? "Low Stock" : "In Stock"}
                       </span>
                     </td>
+
+                    {/* Add the Actions column here */}
+                    <td>
+                      <div className="action-buttons">
+                        <button
+                          type="button"
+                          className="edit-button"
+                          onClick={() => openEditModal(product)}
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          type="button"
+                          className="delete-button"
+                          onClick={() => handleDelete(product)}
+                          disabled={deletingProductId === product.id}
+                        >
+                          {deletingProductId === product.id
+                            ? "Deleting..."
+                            : "Delete"}
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 );
               })}
@@ -236,8 +336,17 @@ function Products() {
           >
             <div className="modal-header">
               <div>
-                <h2>Add Product</h2>
-                <p>Enter the new product information</p>
+                <h2>
+                  {editingProductId !== null
+                    ? "Edit Product"
+                    : "Add Product"}
+                </h2>
+
+                <p>
+                  {editingProductId !== null
+                    ? "Update the product information"
+                    : "Enter the new product information"}
+                </p>
               </div>
 
               <button
@@ -382,8 +491,7 @@ function Products() {
 
               {formError && (
                 <p className="form-error">
-                  Unable to add the product. Check that the SKU is
-                  unique and all information is correct.
+                  {formError}
                 </p>
               )}
 
@@ -402,7 +510,13 @@ function Products() {
                   className="primary-button"
                   disabled={saving}
                 >
-                  {saving ? "Saving..." : "Save Product"}
+                  {saving
+                    ? editingProductId !== null
+                      ? "Updating..."
+                      : "Saving..."
+                    : editingProductId !== null
+                      ? "Update Product"
+                      : "Save Product"}
                 </button>
               </div>
             </form>
