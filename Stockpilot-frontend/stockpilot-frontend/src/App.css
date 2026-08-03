@@ -713,3 +713,46 @@
     grid-column: auto;
   }
 }
+
+/* Product actions */
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edit-button,
+.delete-button {
+  padding: 7px 12px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.edit-button {
+  border: 1px solid #bfdbfe;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.edit-button:hover {
+  background-color: #dbeafe;
+}
+
+.delete-button {
+  border: 1px solid #fecaca;
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+
+.delete-button:hover {
+  background-color: #fee2e2;
+}
+
+.edit-button:disabled,
+.delete-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
