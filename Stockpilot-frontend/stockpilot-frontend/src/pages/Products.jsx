@@ -25,6 +25,9 @@ function Products() {
   const [editingProductId, setEditingProductId] = useState(null);
   const [deletingProductId, setDeletingProductId] = useState(null);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [stockFilter, setStockFilter] = useState("ALL");
+
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -206,6 +209,27 @@ function Products() {
     }
   };
 
+  const filteredProducts = products.filter((product) => {
+    const searchValue = searchTerm.toLowerCase().trim();
+
+    const matchesSearch =
+      product.name?.toLowerCase().includes(searchValue) ||
+      product.sku?.toLowerCase().includes(searchValue) ||
+      product.category?.name
+        ?.toLowerCase()
+        .includes(searchValue);
+
+    const isLowStock =
+      product.quantity <= product.reorderLevel;
+
+    const matchesStockFilter =
+      stockFilter === "ALL" ||
+      (stockFilter === "LOW_STOCK" && isLowStock) ||
+      (stockFilter === "IN_STOCK" && !isLowStock);
+
+    return matchesSearch && matchesStockFilter;
+  });
+
   return (
     <main className="page-content">
       <div className="page-header">
@@ -221,6 +245,41 @@ function Products() {
         >
           Add Product
         </button>
+      </div>
+
+      <div className="product-toolbar">
+        <div className="search-container">
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search by product name, SKU, or category..."
+            value={searchTerm}
+            onChange={(event) =>
+              setSearchTerm(event.target.value)
+            }
+          />
+        </div>
+
+        <div className="filter-container">
+          <select
+            className="stock-filter"
+            value={stockFilter}
+            onChange={(event) =>
+              setStockFilter(event.target.value)
+            }
+          >
+            <option value="ALL">All Products</option>
+            <option value="IN_STOCK">In Stock</option>
+            <option value="LOW_STOCK">Low Stock</option>
+          </select>
+
+          <span className="results-count">
+            {filteredProducts.length}{" "}
+            {filteredProducts.length === 1
+              ? "product"
+              : "products"}
+          </span>
+        </div>
       </div>
 
       {loading && <p>Loading products...</p>}
