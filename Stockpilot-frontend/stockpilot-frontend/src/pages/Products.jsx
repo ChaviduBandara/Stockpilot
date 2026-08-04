@@ -291,8 +291,32 @@ function Products() {
       )}
 
       {!loading && !error && products.length === 0 && (
-        <p>No products found.</p>
+        <div className="empty-state">
+          <h3>No products available</h3>
+          <p>Add your first product to begin managing inventory.</p>
+        </div>
       )}
+
+      {!loading &&
+        !error &&
+        products.length > 0 &&
+        filteredProducts.length === 0 && (
+          <div className="empty-state">
+            <h3>No matching products</h3>
+            <p>Try changing your search text or stock filter.</p>
+
+            <button
+              type="button"
+              className="clear-filter-button"
+              onClick={() => {
+                setSearchTerm("");
+                setStockFilter("ALL");
+              }}
+            >
+              Clear Filters
+            </button>
+          </div>
+        )}
 
       {!loading && !error && products.length > 0 && (
         <div className="table-container">
@@ -312,7 +336,7 @@ function Products() {
             </thead>
 
             <tbody>
-              {products.map((product) => {
+              {filteredProducts.map((product) => {
                 const isLowStock =
                   product.quantity <= product.reorderLevel;
 
