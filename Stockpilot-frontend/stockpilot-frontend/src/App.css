@@ -774,3 +774,13 @@
 .category-form-grid {
   grid-template-columns: 1fr;
 }
+
+.suppliers-table {
+  min-width: 950px;
+}
+
+.supplier-name {
+  color: #111827;
+  font-size: 15px;
+  font-weight: 600;
+}

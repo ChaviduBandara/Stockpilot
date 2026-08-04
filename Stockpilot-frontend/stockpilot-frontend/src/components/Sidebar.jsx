@@ -20,8 +20,11 @@ function Sidebar() {
         <NavLink to="/categories">
           Categories
         </NavLink>
-        
-        <a href="#">Suppliers</a>
+
+        <NavLink to="/suppliers">
+          Suppliers
+        </NavLink>
+
         <a href="#">Customers</a>
         <a href="#">Sales Orders</a>
       </nav>
