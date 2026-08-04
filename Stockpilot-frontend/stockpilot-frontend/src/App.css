@@ -756,3 +756,13 @@
   cursor: not-allowed;
   opacity: 0.6;
 }
+
+.categories-table {
+  min-width: 750px;
+}
+
+.category-name {
+  color: #111827;
+  font-size: 15px;
+  font-weight: 600;
+}

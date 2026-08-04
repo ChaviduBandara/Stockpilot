@@ -17,7 +17,10 @@ function Sidebar() {
           Products
         </NavLink>
 
-        <a href="#">Categories</a>
+        <NavLink to="/categories">
+          Categories
+        </NavLink>
+        
         <a href="#">Suppliers</a>
         <a href="#">Customers</a>
         <a href="#">Sales Orders</a>
