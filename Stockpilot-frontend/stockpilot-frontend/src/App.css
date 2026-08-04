@@ -766,3 +766,11 @@
   font-size: 15px;
   font-weight: 600;
 }
+
+.category-modal {
+  max-width: 560px;
+}
+
+.category-form-grid {
+  grid-template-columns: 1fr;
+}
