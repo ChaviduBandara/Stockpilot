@@ -16,6 +16,8 @@ function Suppliers() {
     const [formData, setFormData] = useState(initialFormData);
     const [formError, setFormError] = useState("");
     const [saving, setSaving] = useState(false);
+    const [editingSupplierId, setEditingSupplierId] = useState(null);
+    const [deletingSupplierId, setDeletingSupplierId] = useState(null);
 
     const fetchSuppliers = async () => {
         try {
@@ -42,8 +44,23 @@ function Suppliers() {
         fetchSuppliers();
     }, []);
 
-    const openModal = () => {
+    const openAddModal = () => {
+        setEditingSupplierId(null);
         setFormData(initialFormData);
+        setFormError("");
+        setShowModal(true);
+    };
+
+    const openEditModal = (supplier) => {
+        setEditingSupplierId(supplier.id);
+
+        setFormData({
+            name: supplier.name || "",
+            email: supplier.email || "",
+            contactNumber: supplier.contactNumber || "",
+            address: supplier.address || "",
+        });
+
         setFormError("");
         setShowModal(true);
     };
@@ -51,6 +68,7 @@ function Suppliers() {
     const closeModal = () => {
         if (!saving) {
             setShowModal(false);
+            setEditingSupplierId(null);
             setFormData(initialFormData);
             setFormError("");
         }
@@ -78,9 +96,17 @@ function Suppliers() {
             address: formData.address.trim(),
         };
 
+        const isEditing = editingSupplierId !== null;
+
+        const url = isEditing
+            ? `/api/suppliers/${editingSupplierId}`
+            : "/api/suppliers";
+
+        const method = isEditing ? "PUT" : "POST";
+
         try {
-            const response = await fetch("/api/suppliers", {
-                method: "POST",
+            const response = await fetch(url, {
+                method,
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -91,11 +117,15 @@ function Suppliers() {
                 const message = await response.text();
 
                 throw new Error(
-                    message || "Failed to add the supplier"
+                    message ||
+                    (isEditing
+                        ? "Failed to update the supplier"
+                        : "Failed to add the supplier")
                 );
             }
 
             setShowModal(false);
+            setEditingSupplierId(null);
             setFormData(initialFormData);
 
             await fetchSuppliers();
@@ -103,10 +133,50 @@ function Suppliers() {
             console.error(error);
 
             setFormError(
-                "Unable to add the supplier. Make sure the email is unique and all required fields are correct."
+                isEditing
+                    ? "Unable to update the supplier. Make sure the email is unique."
+                    : "Unable to add the supplier. Make sure the email is unique."
             );
         } finally {
             setSaving(false);
+        }
+    };
+
+
+    const handleDelete = async (supplier) => {
+        const confirmed = window.confirm(
+            `Are you sure you want to delete "${supplier.name}"?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            setDeletingSupplierId(supplier.id);
+            setError("");
+
+            const response = await fetch(
+                `/api/suppliers/${supplier.id}`,
+                {
+                    method: "DELETE",
+                }
+            );
+
+            if (!response.ok) {
+                const message = await response.text();
+
+                throw new Error(
+                    message || "Failed to delete the supplier"
+                );
+            }
+
+            await fetchSuppliers();
+        } catch (error) {
+            console.error(error);
+            setError("Unable to delete the supplier.");
+        } finally {
+            setDeletingSupplierId(null);
         }
     };
 
@@ -121,7 +191,7 @@ function Suppliers() {
                 <button
                     type="button"
                     className="add-product-button"
-                    onClick={openModal}
+                    onClick={openAddModal}
                 >
                     Add Supplier
                 </button>
@@ -180,6 +250,7 @@ function Suppliers() {
                                             <button
                                                 type="button"
                                                 className="edit-button"
+                                                onClick={() => openEditModal(supplier)}
                                             >
                                                 Edit
                                             </button>
@@ -187,8 +258,12 @@ function Suppliers() {
                                             <button
                                                 type="button"
                                                 className="delete-button"
+                                                onClick={() => handleDelete(supplier)}
+                                                disabled={deletingSupplierId === supplier.id}
                                             >
-                                                Delete
+                                                {deletingSupplierId === supplier.id
+                                                    ? "Deleting..."
+                                                    : "Delete"}
                                             </button>
                                         </div>
                                     </td>
@@ -210,8 +285,17 @@ function Suppliers() {
                     >
                         <div className="modal-header">
                             <div>
-                                <h2>Add Supplier</h2>
-                                <p>Enter the new supplier information</p>
+                                <h2>
+                                    {editingSupplierId !== null
+                                        ? "Edit Supplier"
+                                        : "Add Supplier"}
+                                </h2>
+
+                                <p>
+                                    {editingSupplierId !== null
+                                        ? "Update the supplier information"
+                                        : "Enter the new supplier information"}
+                                </p>
                             </div>
 
                             <button
@@ -315,8 +399,12 @@ function Suppliers() {
                                     disabled={saving}
                                 >
                                     {saving
-                                        ? "Saving..."
-                                        : "Save Supplier"}
+                                        ? editingSupplierId !== null
+                                            ? "Updating..."
+                                            : "Saving..."
+                                        : editingSupplierId !== null
+                                            ? "Update Supplier"
+                                            : "Save Supplier"}
                                 </button>
                             </div>
                         </form>
