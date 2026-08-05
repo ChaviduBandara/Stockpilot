@@ -22,6 +22,7 @@ function SalesOrders() {
     const [orderForm, setOrderForm] = useState(initialOrderForm);
     const [formError, setFormError] = useState("");
     const [saving, setSaving] = useState(false);
+    const [actionOrderId, setActionOrderId] = useState(null);
 
     const fetchOrders = async () => {
         try {
@@ -235,6 +236,70 @@ function SalesOrders() {
         }
     };
 
+    const handleOrderAction = async (orderId, action) => {
+        const actionNames = {
+            pay: "mark this order as paid",
+            complete: "complete this order",
+            cancel: "cancel this order",
+        };
+
+        const confirmed = window.confirm(
+            `Are you sure you want to ${actionNames[action]}?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            setActionOrderId(orderId);
+            setError("");
+
+            const response = await fetch(
+                `/api/orders/${orderId}/${action}`,
+                {
+                    method: "PUT",
+                }
+            );
+
+            if (!response.ok) {
+                const message = await response.text();
+
+                throw new Error(
+                    message || `Failed to ${action} the order`
+                );
+            }
+
+            await fetchOrders();
+
+            if (action === "cancel") {
+                await fetchProducts();
+            }
+        } catch (error) {
+            console.error(error);
+            setError(error.message);
+        } finally {
+            setActionOrderId(null);
+        }
+    };
+
+    const getOrderStatusClass = (status) => {
+        const statusClasses = {
+            PENDING: "pending-status",
+            PROCESSING: "processing-status",
+            COMPLETED: "completed-status",
+            CANCELLED: "cancelled-status",
+        };
+
+        return statusClasses[status] || "";
+    };
+
+    const getPaymentStatusClass = (paymentStatus) => {
+        return paymentStatus === "PAID"
+            ? "paid-status"
+            : "unpaid-status";
+    };
+
     const formatDate = (dateValue) => {
         if (!dateValue) {
             return "No date";
@@ -289,7 +354,8 @@ function SalesOrders() {
                                 <th>Order Date</th>
                                 <th>Items</th>
                                 <th>Total Amount</th>
-                                <th>Status</th>
+                                <th>Order Status</th>
+                                <th>Payment Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -338,29 +404,78 @@ function SalesOrders() {
 
                                     <td>
                                         <span
-                                            className={
-                                                order.status === "COMPLETED"
-                                                    ? "order-status completed-status"
-                                                    : "order-status cancelled-status"
-                                            }
+                                            className={`order-status ${getOrderStatusClass(
+                                                order.status
+                                            )}`}
                                         >
                                             {order.status}
                                         </span>
                                     </td>
 
                                     <td>
-                                        {order.status === "COMPLETED" ? (
-                                            <button
-                                                type="button"
-                                                className="cancel-order-button"
-                                            >
-                                                Cancel
-                                            </button>
-                                        ) : (
-                                            <span className="no-action-text">
-                                                No actions
-                                            </span>
-                                        )}
+                                        <span
+                                            className={`payment-status ${getPaymentStatusClass(
+                                                order.paymentStatus
+                                            )}`}
+                                        >
+                                            {order.paymentStatus || "UNPAID"}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <div className="order-actions">
+                                            {order.status === "PENDING" &&
+                                                order.paymentStatus !== "PAID" && (
+                                                    <>
+                                                        <button
+                                                            type="button"
+                                                            className="pay-order-button"
+                                                            onClick={() =>
+                                                                handleOrderAction(order.id, "pay")
+                                                            }
+                                                            disabled={actionOrderId === order.id}
+                                                        >
+                                                            {actionOrderId === order.id
+                                                                ? "Updating..."
+                                                                : "Mark as Paid"}
+                                                        </button>
+
+                                                        <button
+                                                            type="button"
+                                                            className="cancel-order-button"
+                                                            onClick={() =>
+                                                                handleOrderAction(order.id, "cancel")
+                                                            }
+                                                            disabled={actionOrderId === order.id}
+                                                        >
+                                                            Cancel
+                                                        </button>
+                                                    </>
+                                                )}
+
+                                            {order.status === "PROCESSING" &&
+                                                order.paymentStatus === "PAID" && (
+                                                    <button
+                                                        type="button"
+                                                        className="complete-order-button"
+                                                        onClick={() =>
+                                                            handleOrderAction(order.id, "complete")
+                                                        }
+                                                        disabled={actionOrderId === order.id}
+                                                    >
+                                                        {actionOrderId === order.id
+                                                            ? "Updating..."
+                                                            : "Complete"}
+                                                    </button>
+                                                )}
+
+                                            {(order.status === "COMPLETED" ||
+                                                order.status === "CANCELLED") && (
+                                                    <span className="no-action-text">
+                                                        No actions
+                                                    </span>
+                                                )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
@@ -568,6 +683,5 @@ function SalesOrders() {
     );
 }
 
-//dfs
 
 export default SalesOrders;
