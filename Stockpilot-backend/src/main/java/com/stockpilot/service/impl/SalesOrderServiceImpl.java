@@ -51,7 +51,8 @@ public class SalesOrderServiceImpl implements SalesOrderService {
 
         salesOrder.setCustomer(customer);
         salesOrder.setOrderDate(LocalDateTime.now());
-        salesOrder.setStatus(OrderStatus.COMPLETED);
+        salesOrder.setStatus(OrderStatus.PENDING);
+        salesOrder.setPaymentStatus(PaymentStatus.UNPAID);
 
         BigDecimal totalAmount = BigDecimal.ZERO;
 

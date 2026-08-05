@@ -802,3 +802,236 @@
 .customer-modal {
   max-width: 650px;
 }
+
+/* =========================
+   Sales orders
+   ========================= */
+
+.orders-table {
+  min-width: 1150px;
+}
+
+.order-customer-email {
+  margin-top: 5px;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.order-items {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 210px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+
+  padding: 7px 10px;
+  border-radius: 7px;
+
+  background-color: #f9fafb;
+  color: #374151;
+  font-size: 13px;
+}
+
+.order-item-quantity {
+  color: #6b7280;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.order-total {
+  color: #111827;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.order-status {
+  display: inline-block;
+  padding: 6px 11px;
+  border-radius: 20px;
+
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.completed-status {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.cancelled-status {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.cancel-order-button {
+  padding: 7px 12px;
+
+  border: 1px solid #fecaca;
+  border-radius: 7px;
+
+  background-color: #fef2f2;
+  color: #b91c1c;
+
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cancel-order-button:hover {
+  background-color: #fee2e2;
+}
+
+.no-action-text {
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+/* =========================
+   Create sales order modal
+   ========================= */
+
+.create-order-modal {
+  max-width: 850px;
+}
+
+.order-form-section {
+  margin-top: 26px;
+}
+
+.order-form-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.order-form-section-header h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 17px;
+}
+
+.order-form-section-header p {
+  margin: 4px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.add-item-button {
+  padding: 8px 13px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.add-item-button:hover {
+  background-color: #dbeafe;
+}
+
+.order-form-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-form-item {
+  display: grid;
+  grid-template-columns:
+    minmax(250px, 1fr) 110px 140px 40px;
+  align-items: end;
+  gap: 12px;
+
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background-color: #f9fafb;
+}
+
+.order-item-subtotal {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 11px;
+}
+
+.order-item-subtotal span {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.order-item-subtotal strong {
+  color: #111827;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.remove-item-button {
+  width: 38px;
+  height: 42px;
+
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+
+  background-color: #fef2f2;
+  color: #b91c1c;
+
+  font-size: 21px;
+  cursor: pointer;
+}
+
+.remove-item-button:hover {
+  background-color: #fee2e2;
+}
+
+.remove-item-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.order-total-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 22px;
+  padding: 18px 20px;
+
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+
+  background-color: #eff6ff;
+}
+
+.order-total-summary span {
+  color: #374151;
+  font-weight: 600;
+}
+
+.order-total-summary strong {
+  color: #1d4ed8;
+  font-size: 22px;
+}
+
+@media (max-width: 750px) {
+  .order-form-item {
+    grid-template-columns: 1fr;
+  }
+
+  .order-item-subtotal {
+    padding-bottom: 0;
+  }
+
+  .remove-item-button {
+    width: 100%;
+  }
+}
