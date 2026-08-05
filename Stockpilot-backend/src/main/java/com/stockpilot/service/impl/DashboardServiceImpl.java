@@ -9,6 +9,7 @@ import com.stockpilot.repository.SalesOrderRepository;
 import com.stockpilot.repository.SupplierRepository;
 import com.stockpilot.service.DashboardService;
 import org.springframework.stereotype.Service;
+import com.stockpilot.entity.PaymentStatus;
 
 import java.math.BigDecimal;
 
@@ -58,8 +59,9 @@ public class DashboardServiceImpl implements DashboardService {
                         OrderStatus.CANCELLED
                 );
 
-        BigDecimal totalRevenue = salesOrderRepository.sumTotalAmountByStatus(
-                        OrderStatus.COMPLETED
+        BigDecimal totalRevenue =
+                salesOrderRepository.sumTotalAmountByPaymentStatus(
+                        PaymentStatus.PAID
                 );
 
         if (totalRevenue == null) {

@@ -5,6 +5,7 @@ import com.stockpilot.entity.SalesOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import com.stockpilot.entity.PaymentStatus;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,5 +25,14 @@ public interface SalesOrderRepository extends JpaRepository<SalesOrder, Long> {
         """)
     BigDecimal sumTotalAmountByStatus(
             @Param("status") OrderStatus status
+    );
+
+    @Query("""
+    SELECT COALESCE(SUM(o.totalAmount), 0)
+    FROM SalesOrder o
+    WHERE o.paymentStatus = :paymentStatus
+""")
+    BigDecimal sumTotalAmountByPaymentStatus(
+            @Param("paymentStatus") PaymentStatus paymentStatus
     );
 }
