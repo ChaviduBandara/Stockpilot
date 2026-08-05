@@ -1108,3 +1108,49 @@
   color: #6b7280;
   font-size: 13px;
 }
+
+.order-filters {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 18px;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.filter-group select {
+  min-width: 180px;
+  padding: 9px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  background-color: white;
+}
+
+.clear-filter-button {
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  background-color: white;
+  color: #374151;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.clear-filter-button:hover {
+  background-color: #f3f4f6;
+}
