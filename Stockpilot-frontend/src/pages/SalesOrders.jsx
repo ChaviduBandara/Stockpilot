@@ -23,6 +23,8 @@ function SalesOrders() {
     const [formError, setFormError] = useState("");
     const [saving, setSaving] = useState(false);
     const [actionOrderId, setActionOrderId] = useState(null);
+    const [statusFilter, setStatusFilter] = useState("ALL");
+    const [paymentFilter, setPaymentFilter] = useState("ALL");
 
     const fetchOrders = async () => {
         try {
@@ -300,6 +302,21 @@ function SalesOrders() {
             : "unpaid-status";
     };
 
+    const filteredOrders = orders.filter((order) => {
+        const orderPaymentStatus =
+            order.paymentStatus || "UNPAID";
+
+        const matchesStatus =
+            statusFilter === "ALL" ||
+            order.status === statusFilter;
+
+        const matchesPayment =
+            paymentFilter === "ALL" ||
+            orderPaymentStatus === paymentFilter;
+
+        return matchesStatus && matchesPayment;
+    });
+
     const formatDate = (dateValue) => {
         if (!dateValue) {
             return "No date";
@@ -329,6 +346,57 @@ function SalesOrders() {
                 </button>
             </div>
 
+            <div className="order-filters">
+                <div className="filter-group">
+                    <label htmlFor="statusFilter">
+                        Order Status
+                    </label>
+
+                    <select
+                        id="statusFilter"
+                        value={statusFilter}
+                        onChange={(event) =>
+                            setStatusFilter(event.target.value)
+                        }
+                    >
+                        <option value="ALL">All Statuses</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="PROCESSING">Processing</option>
+                        <option value="COMPLETED">Completed</option>
+                        <option value="CANCELLED">Cancelled</option>
+                    </select>
+                </div>
+
+                <div className="filter-group">
+                    <label htmlFor="paymentFilter">
+                        Payment Status
+                    </label>
+
+                    <select
+                        id="paymentFilter"
+                        value={paymentFilter}
+                        onChange={(event) =>
+                            setPaymentFilter(event.target.value)
+                        }
+                    >
+                        <option value="ALL">All Payments</option>
+                        <option value="UNPAID">Unpaid</option>
+                        <option value="PAID">Paid</option>
+                    </select>
+                </div>
+
+                <button
+                    type="button"
+                    className="clear-filter-button"
+                    onClick={() => {
+                        setStatusFilter("ALL");
+                        setPaymentFilter("ALL");
+                    }}
+                >
+                    Clear Filters
+                </button>
+            </div>
+
             {loading && <p>Loading sales orders...</p>}
 
             {error && (
@@ -344,7 +412,19 @@ function SalesOrders() {
                 </div>
             )}
 
-            {!loading && !error && orders.length > 0 && (
+            {!loading &&
+                !error &&
+                orders.length > 0 &&
+                filteredOrders.length === 0 && (
+                    <div className="empty-state">
+                        <h3>No matching orders</h3>
+                        <p>
+                            Change or clear the selected filters.
+                        </p>
+                    </div>
+                )}
+
+            {!loading && !error && filteredOrders.length > 0 && (
                 <div className="table-container">
                     <table className="data-table orders-table">
                         <thead>
@@ -361,7 +441,7 @@ function SalesOrders() {
                         </thead>
 
                         <tbody>
-                            {orders.map((order) => (
+                            {filteredOrders.map((order) => (
                                 <tr key={order.id}>
                                     <td>#{order.id}</td>
 
