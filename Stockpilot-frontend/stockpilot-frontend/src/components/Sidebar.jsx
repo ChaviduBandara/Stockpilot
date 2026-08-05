@@ -29,7 +29,9 @@ function Sidebar() {
           Customers
         </NavLink>
 
-        <a href="#">Sales Orders</a>
+        <NavLink to="/orders">
+          Sales Orders
+        </NavLink>
       </nav>
     </aside>
   );
