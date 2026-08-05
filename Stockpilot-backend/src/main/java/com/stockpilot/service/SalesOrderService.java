@@ -20,4 +20,8 @@ public interface SalesOrderService {
 
     List<SalesOrder> getOrdersByStatus(OrderStatus status);
 
+    SalesOrder markOrderAsPaid(Long id);
+
+    SalesOrder completeOrder(Long id);
+
 }

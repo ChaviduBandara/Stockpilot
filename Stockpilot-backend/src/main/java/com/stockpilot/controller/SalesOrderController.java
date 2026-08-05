@@ -53,6 +53,26 @@ public class SalesOrderController {
         return ResponseEntity.ok(cancelledOrder);
     }
 
+    @PutMapping("/{id}/pay")
+    public ResponseEntity<SalesOrder> markOrderAsPaid(
+            @PathVariable Long id
+    ) {
+        SalesOrder updatedOrder =
+                salesOrderService.markOrderAsPaid(id);
+
+        return ResponseEntity.ok(updatedOrder);
+    }
+
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<SalesOrder> completeOrder(
+            @PathVariable Long id
+    ) {
+        SalesOrder completedOrder =
+                salesOrderService.completeOrder(id);
+
+        return ResponseEntity.ok(completedOrder);
+    }
+
     @GetMapping("/customer/{customerId}")
     public List<SalesOrder> getOrdersByCustomer(@PathVariable Long customerId) {
         return salesOrderService.getOrdersByCustomer(customerId);

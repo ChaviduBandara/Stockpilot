@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import com.stockpilot.entity.OrderStatus;
+import com.stockpilot.entity.PaymentStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -171,5 +173,69 @@ public class SalesOrderServiceImpl implements SalesOrderService {
     public List<SalesOrder> getOrdersByStatus(OrderStatus status) {
         return salesOrderRepository
                 .findByStatusOrderByOrderDateDesc(status);
+    }
+
+    @Override
+    @Transactional
+    public SalesOrder markOrderAsPaid(Long id) {
+        SalesOrder salesOrder = salesOrderRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Sales order not found"
+                ));
+
+        if (salesOrder.getStatus() == OrderStatus.CANCELLED) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "A cancelled order cannot be paid"
+            );
+        }
+
+        if (salesOrder.getPaymentStatus() == PaymentStatus.PAID) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "The order has already been paid"
+            );
+        }
+
+        salesOrder.setPaymentStatus(PaymentStatus.PAID);
+        salesOrder.setStatus(OrderStatus.PROCESSING);
+
+        return salesOrderRepository.save(salesOrder);
+    }
+
+    @Override
+    @Transactional
+    public SalesOrder completeOrder(Long id) {
+        SalesOrder salesOrder = salesOrderRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Sales order not found"
+                ));
+
+        if (salesOrder.getStatus() == OrderStatus.CANCELLED) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "A cancelled order cannot be completed"
+            );
+        }
+
+        if (salesOrder.getPaymentStatus() != PaymentStatus.PAID) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "The order must be paid before it can be completed"
+            );
+        }
+
+        if (salesOrder.getStatus() == OrderStatus.COMPLETED) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "The order is already completed"
+            );
+        }
+
+        salesOrder.setStatus(OrderStatus.COMPLETED);
+
+        return salesOrderRepository.save(salesOrder);
     }
 }
