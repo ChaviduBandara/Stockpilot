@@ -788,3 +788,17 @@
 .supplier-modal {
   max-width: 650px;
 }
+
+.customers-table {
+  min-width: 950px;
+}
+
+.customer-name {
+  color: #111827;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.customer-modal {
+  max-width: 650px;
+}
